@@ -20,10 +20,18 @@ def parse_args():
         sp.add_argument("--gamma", type=float, default=0.99)
         sp.add_argument("--entropy_coef", type=float, default=0.01)
         sp.add_argument("--value_coef", type=float, default=0.5)
-        sp.add_argument("--epochs", type=int, default=1)
+        sp.add_argument("--epochs", type=int, default=1, help="Epochs per iteration")
+        sp.add_argument("--iterations", type=int, default=1, help="Number of AlphaZero-like training cycles")
+        sp.add_argument("--eval_every", type=int, default=0, help="Evaluate every N iterations (0=never)")
         sp.add_argument("--reset_loader_state", action="store_true", help="Keep model weights from checkpoint but restart data stream from beginning")
         sp.add_argument("--flat_at_end", action="store_true", help="During eval, force-close any open position at the final bar to realize PnL")
         sp.add_argument("--train_long_only", action="store_true", help="During training, disallow shorts and only allow HOLD/BUY/SELL-to-close")
+        # Exploration schedules and eval sampling
+        sp.add_argument("--train_temperature_start", type=float, default=1.0, help="Initial temperature for action sampling during training")
+        sp.add_argument("--train_temperature_end", type=float, default=1.0, help="Final temperature for training")
+        sp.add_argument("--train_temperature_decay_iters", type=int, default=1, help="Iterations over which to anneal training temperature")
+        sp.add_argument("--eval_sample", action="store_true", help="During eval, sample from policy instead of greedy argmax")
+        sp.add_argument("--eval_temperature", type=float, default=1.0, help="Temperature used for eval sampling")
 
     sp_train = sub.add_parser("train")
     add_shared(sp_train)
@@ -50,9 +58,16 @@ def main():
         entropy_coef=args.entropy_coef,
         value_coef=args.value_coef,
         epochs=args.epochs,
+        iterations=args.iterations,
+        eval_every=args.eval_every,
         reset_loader_state=args.reset_loader_state,
         flat_at_end=args.flat_at_end,
         train_long_only=args.train_long_only,
+        train_temperature_start=args.train_temperature_start,
+        train_temperature_end=args.train_temperature_end,
+        train_temperature_decay_iters=args.train_temperature_decay_iters,
+        eval_sample=args.eval_sample,
+        eval_temperature=args.eval_temperature,
     )
 
     trainer = Trainer(cfg, logger=logger)

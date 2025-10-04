@@ -14,7 +14,7 @@ class PolicyValueLSTM(nn.Module):
     Hidden state is maintained externally and can be saved/restored.
     """
 
-    def __init__(self, input_dim: int = 5, hidden_dim: int = 64):
+    def __init__(self, input_dim: int = 10, hidden_dim: int = 64):
         super().__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
