@@ -1,6 +1,25 @@
 --extra-index-url https://download.pytorch.org/whl/cu121
+
+# Core ML Framework
 torch==2.2.2+cu121
+torchvision==0.17.2+cu121
+torchaudio==2.2.2+cu121
+
+# Data Handling
 numpy==1.26.4
 pandas==2.2.2
 tqdm==4.66.4
+
+# Visualization & Debugging
+matplotlib==3.8.4
+seaborn==0.13.2
+
+# Machine Learning Utils
+scikit-learn==1.4.2
+
+# Misc
 pyyaml==6.0.2
+typing-extensions==4.11.0
+
+# For safe reproducibility and logs
+psutil==5.9.8
